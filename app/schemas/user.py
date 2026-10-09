@@ -20,5 +20,3 @@ class SUserInDb(SUserResponse):
     model_config = ConfigDict(from_attributes=True)
 
     hashed_password: str
-
-

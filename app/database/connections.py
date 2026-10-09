@@ -3,6 +3,6 @@ from app.config import settings
 
 URL = settings.DATABASE_URL
 
-engine = create_async_engine(engine_url=URL)
+engine = create_async_engine(url=URL)
 
-async_session = async_sessionmaker(bing=engine, expire_on_commit=False)
+async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
