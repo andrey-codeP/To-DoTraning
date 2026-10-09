@@ -16,3 +16,4 @@ class UserTable(DeclarativeBase):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=func.now, nullable=False
     )
+    is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
