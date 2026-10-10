@@ -1,7 +1,8 @@
-from app.database.base import Base
+from app.database.models.base import Base
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import DateTime
-from datetime import datetime, func
+from sqlalchemy import DateTime, func
+from datetime import datetime
+
 
 class TaskTable(Base):
     __tablename__ = "tasks"
@@ -11,3 +12,5 @@ class TaskTable(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=func.now, nullable=False
     )
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime)
+    completed: Mapped[bool] = mapped_column(default=False, index=True, nullable=False)
