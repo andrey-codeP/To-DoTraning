@@ -20,5 +20,4 @@ class UserTable(Base):
     )
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
 
-
     tasks: Mapped[list["TaskTable"]] = relationship(back_populates="user")
