@@ -1,5 +1,5 @@
 from app.database.models.base import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import DateTime, func
 from datetime import datetime
 
@@ -14,3 +14,5 @@ class TaskTable(Base):
     )
     completed_at: Mapped[datetime | None] = mapped_column(DateTime)
     completed: Mapped[bool] = mapped_column(default=False, index=True, nullable=False)
+
+    user: Mapped["UserTable"] = relationship(back_populates="tasks")
