@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from app.schemas.task import TaskCreate
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.models.task import TaskTable
@@ -27,3 +27,11 @@ class TaskRepository:
         query = select(TaskTable).where(TaskTable.id == task_id)
         result = await session.execute(query)
         return result.scalar_one_or_none()
+
+    @classmethod
+    async def delete_task(cls, task_id: int, session: AsyncSession):
+        query = delete(TaskTable).where(TaskTable.id == task_id)
+        result = await session.execute(query)
+        await session.commit()
+        deleted_task = result.scalar_one_or_none()
+        return deleted_task
