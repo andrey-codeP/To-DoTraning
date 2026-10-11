@@ -4,17 +4,19 @@ from app.schemas.user import SUserCreate
 from sqlalchemy import select
 
 
+from app.security import hash_password, verify_hashed_password
+
+
 class RepositoryUser:
     @classmethod
     async def create_user(cls, user_db: SUserCreate, session: AsyncSession):
         user = user_db.model_dump()
 
-        hashed_password = user["password"]
-        user.pop("password")
+        plain_password=user.pop("password")
+        hashed_password = hash_password(plain_password)
         user["hashed_password"] = hashed_password
 
         user_db = UserTable(**user)
-
         session.add(user_db)
 
         await session.commit()
