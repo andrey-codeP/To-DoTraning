@@ -20,7 +20,5 @@ class UserTable(Base):
     )
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
 
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"), nullable=False
-    )
+
     tasks: Mapped[list["TaskTable"]] = relationship(back_populates="user")
