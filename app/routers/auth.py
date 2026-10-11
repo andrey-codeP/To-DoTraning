@@ -10,5 +10,5 @@ router = APIRouter(prefix="/auth", tags=["auth"])
     "/register", status_code=status.HTTP_201_CREATED, response_model=SUserResponse
 )
 async def registry(user: SUserCreate, session: SessionDep) -> SUserResponse:
-    user_in_db = await RepositoryUser.create_user(user, session)
-    return user_in_db
+    created_user = await RepositoryUser.create_user(user, session)
+    return created_user
