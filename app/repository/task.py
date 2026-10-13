@@ -9,11 +9,11 @@ from datetime import datetime, timezone
 
 class TaskRepository:
     @classmethod
-    async def create_task(cls, task: TaskCreate, session: AsyncSession):
+    async def create_task(cls, owner_id: int, task: TaskCreate, session: AsyncSession):
         task_from_user = task.model_dump()
         now = datetime.now(timezone.utc)
         task_from_user["created_at"] = now
-        task = TaskTable(**task_from_user)
+        task = TaskTable(**task_from_user, user_id=owner_id)
 
         session.add(task)
 
@@ -24,7 +24,9 @@ class TaskRepository:
 
     @classmethod
     async def get_task_with_id(cls, user_id: int, task_id: int, session: AsyncSession):
-        query = select(TaskTable).where(TaskTable.user_id == user_id, TaskTable.id == task_id)
+        query = select(TaskTable).where(
+            TaskTable.user_id == user_id, TaskTable.id == task_id
+        )
         result = await session.execute(query)
         return result.scalar_one_or_none()
 
