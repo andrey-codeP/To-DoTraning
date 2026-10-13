@@ -11,7 +11,7 @@ router = APIRouter(prefix="/task", tags=["task"])
 
 @router.post("/", response_model=TaskResponse, status_code=status.HTTP_201_CREATED)
 async def create_task(task: TaskCreate, session: SessionDep, user_id: VerifUserId):
-    task = await TaskRepository.create_task(task, session)
+    task = await TaskRepository.create_task(user_id, task, session)
     return task
 
 
