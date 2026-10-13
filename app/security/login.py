@@ -76,7 +76,7 @@ def get_current_user_by_id(token: Annotated[str, Depends(oauth2_scheme)]):
         )
 
 
-def get__user_with_refersh_token(
+def get_user_with_refersh_token(
     refresh_token: Annotated[str | None, Cookie(default=None, alias="refresh_token")],
 ):
     try:
@@ -108,3 +108,4 @@ def get__user_with_refersh_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+VerifUserId = Annotated[int, Depends(get_current_user_by_id)]
