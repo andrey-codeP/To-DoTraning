@@ -18,9 +18,9 @@ def create_access_token(user_id: int) -> str:
         "type": "access",
     }
     expire_time = datetime.now(timezone.utc) + timedelta(
-        minutes=int(settings.EXPIRE_ACCESS_FROM_MINUTES)
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
-    payload.update({"exp": expire_time})
+    payload.update({"exp": int(expire_time.timestamp())})
     encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm=settings.ALGORITHM)
 
     return encoded_jwt
@@ -34,7 +34,7 @@ def create_refresh_token(user_id: int) -> str:
     expire_time = datetime.now(timezone.utc) + timedelta(
         days=int(settings.REFRESH_TOKEN_EXPIRE_DAYS)
     )
-    payload.update({"exp": expire_time})
+    payload.update({"exp": int(expire_time.timestamp())})
     encoded_token = jwt.encode(payload, SECRET_KEY, algorithm=settings.ALGORITHM)
 
     return encoded_token
@@ -51,15 +51,15 @@ def get_current_user_by_id(token: Annotated[str, Depends(oauth2_scheme)]):
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        user_id = int(encoded_jwt["sub"])
+        user_id: str = encoded_jwt.get("sub")
 
         if user_id is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="invalid token type",
+                detail="invalid token",
             )
 
-        return user_id
+        return int(user_id)
 
     except jwt.ExpiredSignatureError:
         raise HTTPException(
@@ -76,7 +76,7 @@ def get_current_user_by_id(token: Annotated[str, Depends(oauth2_scheme)]):
         )
 
 
-def get_user_with_refersh_token(
+def get_user_with_refresh_token(
     refresh_token: Annotated[str | None, Cookie(default=None, alias="refresh_token")],
 ):
     try:
@@ -107,5 +107,6 @@ def get_user_with_refersh_token(
             detail="invalid token",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
 
 VerifUserId = Annotated[int, Depends(get_current_user_by_id)]
