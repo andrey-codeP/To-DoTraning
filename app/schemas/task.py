@@ -10,7 +10,7 @@ class TaskCreate(BaseModel):
 class TaskResponse(TaskCreate):
     id: int
     created_at: datetime
-    completed_at: datetime
+    completed_at: datetime | None
     completed: bool
 
     model_config = ConfigDict(from_attributes=True)
