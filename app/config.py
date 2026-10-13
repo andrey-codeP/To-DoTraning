@@ -6,8 +6,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = Field(..., description="Database URL")
     SECRET_KEY: str = Field(..., description="Secret key")
     ALGORITHM: str = Field(..., description="Algorithm")
-    EXPIRE_ACCESS_FROM_MINUTES: str = Field(
-        ..., description="Expiration time in minutes"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(
+        default=15, gt=0, description="Expiration time in minutes"
     )
 
     model_config = SettingsConfigDict(
